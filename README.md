@@ -4,11 +4,9 @@ An Arduino library for **real-time stress level prediction** based on Heart Rate
 
 ## Features
 
-- 🫀 Predicts stress level from **RMSSD**, **SDNN**, and **BPM**
-- ⚡ Runs entirely **on-device** (no cloud, no external API)
-- 🧠 Powered by a **Random Forest model** (10 trees, trained in Python)
-- 📦 Compatible with **any Arduino-based board**
-- 🔌 Plug-and-play integration with **MAX30102** pulse oximeter sensor
+-  Predicts stress level from **RMSSD**, **SDNN**, and **BPM**
+-  Powered by a **Random Forest model** (10 trees, trained in Python)
+-  Compatible with **any Arduino-based board**
 
 ## Stress Level Output
 
