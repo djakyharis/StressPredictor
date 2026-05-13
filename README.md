@@ -1,0 +1,130 @@
+# StressPredictor
+
+An Arduino library for **real-time stress level prediction** based on Heart Rate Variability (HRV) features. Uses a lightweight Random Forest classifier optimized for microcontrollers — no internet or server required.
+
+## Features
+
+- 🫀 Predicts stress level from **RMSSD**, **SDNN**, and **BPM**
+- ⚡ Runs entirely **on-device** (no cloud, no external API)
+- 🧠 Powered by a **Random Forest model** (10 trees, trained in Python)
+- 📦 Compatible with **any Arduino-based board**
+- 🔌 Plug-and-play integration with **MAX30102** pulse oximeter sensor
+
+## Stress Level Output
+
+| Value | Label        | Description                         |
+|-------|--------------|-------------------------------------|
+| `0`   | Stres Rendah | Low stress — HRV is healthy         |
+| `1`   | Stres Sedang | Moderate stress                     |
+| `2`   | Stres Tinggi | High stress — HRV is suppressed     |
+
+## Installation
+
+1. Download this repository as a `.zip` file
+2. In Arduino IDE: **Sketch → Include Library → Add .ZIP Library...**
+3. Select the downloaded `.zip` file
+4. Done — the library is ready to use
+
+## Dependencies
+
+Install these libraries via Arduino Library Manager:
+
+- [`SparkFun MAX3010x Pulse and Proximity Sensor Library`](https://github.com/sparkfun/SparkFun_MAX3010x_Sensor_Library) — for MAX30102 sensor (optional, only for realtime examples)
+
+## Usage
+
+### Basic Prediction (Static Input)
+
+```cpp
+#include <StressPredictor.h>
+
+StressPredictor stressModel;
+
+void setup() {
+  Serial.begin(115200);
+
+  float rmssd = 45.61;
+  float sdnn  = 32.18;
+  float bpm   = 98.23;
+
+  int result = stressModel.predict(rmssd, sdnn, bpm);
+
+  if (result == 0)      Serial.println("Stres Rendah");
+  else if (result == 1) Serial.println("Stres Sedang");
+  else if (result == 2) Serial.println("Stres Tinggi");
+}
+
+void loop() {}
+```
+
+### Real-time with MAX30102 Sensor
+
+See [`examples/MAX30102_RealtimePrediction/`](examples/MAX30102_RealtimePrediction/) for a complete example that:
+- Reads raw IR signal from MAX30102
+- Computes RR intervals between heartbeats
+- Calculates SDNN and RMSSD from a 15-beat window
+- Predicts stress level in real-time
+
+## API Reference
+
+### `StressPredictor()`
+Constructor — no initialization required.
+
+### `int predict(float rmssd, float sdnn, float bpm)`
+Runs the Random Forest model and returns the predicted stress class.
+
+| Parameter | Type    | Unit | Description                        |
+|-----------|---------|------|------------------------------------|
+| `rmssd`   | `float` | ms   | Root Mean Square of Successive Differences |
+| `sdnn`    | `float` | ms   | Standard Deviation of NN Intervals |
+| `bpm`     | `float` | bpm  | Heart Rate in Beats Per Minute     |
+
+**Returns:** `0` (Low), `1` (Medium), or `2` (High)
+
+## How It Works
+
+```
+MAX30102 Sensor
+      │
+      ▼
+checkForBeat() → RR interval (ms)
+      │
+      ▼
+Buffer 15 RR intervals
+      │
+      ├── computeSDNN()
+      ├── computeRMSSD()
+      └── BPM = 60000 / RR
+      │
+      ▼
+stressModel.predict(rmssd, sdnn, bpm)
+      │
+      ▼
+Random Forest (10 trees) → majority vote
+      │
+      ▼
+0 / 1 / 2
+```
+
+The model was trained in Python using `scikit-learn` and exported to C++ using [`micromlgen`](https://github.com/eloquentarduino/micromlgen). The full decision tree logic lives in `src/model.h`.
+
+## Model Performance
+
+| Metric              | Value    |
+|---------------------|----------|
+| Accuracy (test set) | 98.97%   |
+| Cross-validation    | 99.38% ± 1.24% (5-fold) |
+| Trees               | 10       |
+| Max depth           | 5        |
+| Input features      | 3        |
+
+## Examples
+
+| Example | Description |
+|---------|-------------|
+| [`BasicPrediction`](examples/BasicPrediction/) | Static test with hardcoded values |
+| [`MAX30102_RealtimePrediction`](examples/MAX30102_RealtimePrediction/) | Real-time prediction using MAX30102 sensor |
+
+## License
+
+MIT License — free to use, modify, and distribute.

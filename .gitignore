@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Arduino build artifacts
+build/
+*.elf
+*.hex
+*.bin
+
+# IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# Temporary files
+*.tmp
+*.log
