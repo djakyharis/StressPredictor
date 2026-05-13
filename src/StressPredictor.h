@@ -8,11 +8,11 @@ class StressPredictor {
     StressPredictor();
     
     /**
-     * Prediksi tingkat stres berdasarkan fitur
-     * @param rmssd Nilai RMSSD (ms)
-     * @param sdnn Nilai SDNN (ms)
-     * @param bpm Nilai Detak Jantung (Beats Per Minute)
-     * @return 0: Stres Rendah, 1: Stres Sedang, 2: Stres Tinggi
+     * Predict stress level from HRV features.
+     * @param rmssd RMSSD value (ms)
+     * @param sdnn  SDNN value (ms)
+     * @param bpm   Heart rate (beats per minute)
+     * @return 0: Low, 1: Medium, 2: High stress
      */
     int predict(float rmssd, float sdnn, float bpm);
 };

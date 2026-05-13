@@ -2,20 +2,15 @@
 #include "model.h"
 
 StressPredictor::StressPredictor() {
-    // Constructor tidak memerlukan inisialisasi khusus untuk model ini
+    // No special initialization needed
 }
 
 int StressPredictor::predict(float rmssd, float sdnn, float bpm) {
-    // Urutan fitur harus sama persis dengan saat training di Python:
-    // 1. RMSSD (ms)
-    // 2. SDNN (ms)
-    // 3. BPM
+    // Feature order must match training: RMSSD, SDNN, BPM
     float features[3] = {rmssd, sdnn, bpm};
-    
-    // Inisialisasi classifier Random Forest
+
     Eloquent::ML::Port::StressPredictorRF clf;
-    
-    // Melakukan prediksi 
-    // Return: 0 (Stres Rendah), 1 (Stres Sedang), 2 (Stres Tinggi)
+
+    // Returns: 0 = Low, 1 = Medium, 2 = High stress
     return clf.predict(features);
 }
