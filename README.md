@@ -98,6 +98,9 @@ Buffer 15 RR intervals
 stressModel.predict(rmssd, sdnn, bpm)
       │
       ▼
+Z-Score Normalization (Auto-Scaled)
+      │
+      ▼
 Random Forest (10 trees) → majority vote
       │
       ▼
@@ -111,10 +114,12 @@ The model was trained in Python using `scikit-learn` and exported to C++ using [
 | Metric              | Value    |
 |---------------------|----------|
 | Accuracy (test set) | 98.97%   |
-| Cross-validation    | 99.38% ± 1.24% (5-fold) |
+| Preprocessing       | StandardScaler (Z-Score Normalization) |
 | Trees               | 10       |
 | Max depth           | 5        |
-| Input features      | 3        |
+| Input features      | 3 (RMSSD, SDNN, BPM) |
+
+*Note: The C++ library automatically normalizes the incoming features in real-time using mean and scale constants exported from Python during the training phase.*
 
 ## Examples
 
