@@ -9,6 +9,11 @@ int StressPredictor::predict(float rmssd, float sdnn, float bpm) {
     // Feature order must match training: RMSSD, SDNN, BPM
     float features[3] = {rmssd, sdnn, bpm};
 
+    // Normalize features using constants from model.h
+    for (int i = 0; i < 3; i++) {
+        features[i] = (features[i] - SCALER_MEANS[i]) / SCALER_SCALES[i];
+    }
+
     Eloquent::ML::Port::StressPredictorRF clf;
 
     // Returns: 0 = Low, 1 = Medium, 2 = High stress
