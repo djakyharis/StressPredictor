@@ -109,6 +109,16 @@ Random Forest (10 trees) → majority vote
 
 The model was trained in Python using `scikit-learn` and exported to C++ using [`micromlgen`](https://github.com/eloquentarduino/micromlgen). The full decision tree logic lives in `src/model.h`.
 
+### Custom Model Training & Evaluation
+
+The library includes Python scripts for training, evaluation, and data distribution visualization inside the [`python/`](python/) directory:
+
+- **[`train_model.py`](python/train_model.py)**: Melatih model Random Forest menggunakan data `DATA TRAINING.csv` (ditemukan secara dinamis di root project) dan secara otomatis meng-ekspor model baru ke [`src/model.h`](src/model.h).
+- **[`evaluate_model.py`](python/evaluate_model.py)**: Mengevaluasi akurasi model dan menghasilkan plot Confusion Matrix serta Feature Importance di folder `python/`.
+- **[`plot_distribution.py`](python/plot_distribution.py)**: Memvisualisasikan distribusi data sebelum dan sesudah normalisasi dalam bentuk plot `distribution_plot.png`.
+
+*Catatan: File dataset `DATA TRAINING.csv` diletakkan di root project (di luar folder library). `.gitignore` telah dikonfigurasi untuk mengecualikan file `.csv`, visualisasi `.png`, dan virtual environment agar data tidak masuk ke dalam git repository library.*
+
 ## Model Performance
 
 | Metric              | Value    |

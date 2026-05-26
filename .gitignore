@@ -18,3 +18,16 @@ build/
 # Temporary files
 *.tmp
 *.log
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+venv/
+env/
+
+# Datasets and plots
+*.csv
+*.png
