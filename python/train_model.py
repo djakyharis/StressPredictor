@@ -6,27 +6,10 @@ from sklearn.metrics import accuracy_score, classification_report
 from micromlgen import port
 import os
 
-# Mendapatkan direktori skrip dijalankan
 script_dir = os.path.dirname(os.path.abspath(__file__)) if '__file__' in locals() else os.getcwd()
 
-# Mencari DATA TRAINING.csv secara dinamis
+
 csv_path = 'DATA TRAINING.csv'
-if not os.path.exists(csv_path):
-    # Coba satu level di atas (jika dijalankan dari StressPredictor)
-    parent_path = os.path.join(script_dir, '..', 'DATA TRAINING.csv')
-    if os.path.exists(parent_path):
-        csv_path = parent_path
-    else:
-        # Coba dua level di atas (jika dijalankan dari StressPredictor/python)
-        grandparent_path = os.path.join(script_dir, '..', '..', 'DATA TRAINING.csv')
-        if os.path.exists(grandparent_path):
-            csv_path = grandparent_path
-
-if not os.path.exists(csv_path):
-    print(f"Error: File 'DATA TRAINING.csv' tidak ditemukan. Harap letakkan file tersebut di root project.")
-    exit(1)
-
-print(f"Menggunakan file dataset dari: {os.path.abspath(csv_path)}")
 
 # 1. Muat Data
 df = pd.read_csv(csv_path)
@@ -74,7 +57,6 @@ const float SCALER_SCALES[3] = {{{scaler.scale_[0]}f, {scaler.scale_[1]}f, {scal
 
 c_code_combined = scaler_code + c_code
 
-# Cari folder StressPredictor/src
 src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
 if os.path.exists(src_dir):
     dest_path = os.path.join(src_dir, 'model.h')
@@ -82,7 +64,6 @@ if os.path.exists(src_dir):
         f.write(c_code_combined)
     print(f"Berhasil! Model diekspor dan disimpan ke {dest_path}")
 else:
-    # Fallback ke folder saat ini jika dijalankan di luar project structure yang normal
     dest_path = os.path.join(script_dir, 'model.h')
     with open(dest_path, 'w') as f:
         f.write(c_code_combined)
